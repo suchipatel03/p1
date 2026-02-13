@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday</title>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Montserrat:wght@300&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        body {
+            margin: 0; min-height: 100vh; display: flex; justify-content: center; align-items: center;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+            font-family: 'Pacifico', cursive; color: #fff; text-align: center; overflow: hidden;
+        }
+        .birthday-card {
+            max-width: 1150px; padding: 40px; background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px); border-radius: 30px; border: 3px dashed white;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1); position: relative; z-index: 10;
+        }
+        h1 { 
+            font-size: 4.5rem;
+            color: #bf3661; 
+            text-shadow: 3px 3px 0px white;
+            margin-top: 0;       
+        }
+        p {
+            font-size: 1.8rem; 
+            color: #555; 
+            font-family: 'Montserrat', sans-serif; 
+            font-weight: bold; 
+            margin-bottom: 30px;
+        }
+        
+        .btn-row { 
+            display: flex; 
+            gap: 15px; 
+            justify-content: center; 
+            flex-wrap: wrap; 
+        }
+
+        .back-btn, .celebrate-btn { 
+            font-family: 'Montserrat', sans-serif; color: #9b3555f6; text-decoration: none; 
+            border: 2px solid #882944; padding: 10px 25px; border-radius: 25px; 
+            position: relative; z-index: 20; background: transparent; cursor: pointer;
+            font-weight: bold; font-size: 1rem;
+        }
+        .celebrate-btn { background: #bf3661; color: white; }
+        .back-btn:hover, .celebrate-btn:hover { background: #972b4d; color: white; opacity: 0.9; }
+
+        /* Original Floating Emojis */
+        .bday-emoji { position: absolute; bottom: -50px; font-size: 30px; animation: bdayFloat 5s linear infinite; z-index: 1; pointer-events: none; }
+        @keyframes bdayFloat {
+            0% { transform: translateY(0) scale(1); opacity: 1; }
+            100% { transform: translateY(-110vh) scale(1.2); opacity: 0; }
+        }
+
+        /* Confetti Styles from Index Copy */
+        .confetti {
+            position: fixed; top: -12px; width: 10px; height: 10px; border-radius: 3px;
+            opacity: .9; pointer-events: none; animation: fall 1.25s ease-in forwards; z-index: 100;
+        }
+        @keyframes fall { to { transform: translateY(110vh) rotate(420deg); opacity: 0; } }
+
+        /* Balloon Styles from Index Copy */
+        .balloon {
+            position: fixed; bottom: -80px; width: 44px; height: 56px; border-radius: 50%;
+            opacity: .95; pointer-events: none; animation: floatUp 4.2s linear forwards;
+            box-shadow: inset 0 -10px 16px rgba(0,0,0,.12); border: 1px solid rgba(0,0,0,.06); z-index: 50;
+        }
+        .balloon:after {
+            content: ""; position: absolute; left: 50%; bottom: -50px;
+            width: 2px; height: 50px; transform: translateX(-50%); background: rgba(0,0,0,0.12);
+        }
+        @keyframes floatUp { to { transform: translateY(-120vh) translateX(var(--dx)); opacity: 0; } }
+    </style>
+</head>
+<body>
+    <div class="birthday-card">
+        <h1>Happy Birthday Akshu!</h1>
+        <p>
+            Wishing You Happiest Birthday My Love. You've really become a Splendid young man. Stay Strong, Stay Positive and Stay Healthy. 
+            I Hope You Get all the Achivements in this year. You go on lots of Trips. You Learn and Exeperience new things. Stay strong babess 
+            not all the time you always have me. I always want to be part of your life. Always Believe in youself, never give up easily. I know 
+            this is boring paragraph sorry. Hehe Bahut masti krna babess it's your day and mujhe party dena mt bhulna babess. Aur abhi tak to tereko 
+            tera gift mil gya hoga. kesa lga?? sorry achha nhi lga na koi na agli baar pakka ps6 dungi. Aur cake mere ko bhi khilana. hamesha Happy rehna mera baccha.
+            I will never ever stop loving you. Happy Birthday Bachcha..
+        </p>
+        <div class="btn-row">
+            <button class="celebrate-btn" id="celebBtn">Celebrate! 🎉</button>
+            <a href="index.html" class="back-btn">← Back</a>
+        </div>
+    </div>
+
+    <script>
+        // --- 1. ORIGINAL FLOATING EMOJIS ---
+        const bdayEmojis = ['🎂', '🎉', '🎁', '🎈'];
+        function spawnBdayEmoji() {
+            const e = document.createElement('div');
+            e.className = 'bday-emoji';
+            e.innerHTML = bdayEmojis[Math.floor(Math.random() * bdayEmojis.length)];
+            e.style.left = Math.random() * 100 + 'vw';
+            document.body.appendChild(e);
+            setTimeout(() => e.remove(), 5000);
+        }
+        setInterval(spawnBdayEmoji, 300);
+
+        // --- 2. CONFETTI & BALLOONS FROM INDEX COPY ---
+        const dotColors = ["#ff69b4", "#00b4ff", "#ffd166", "#7c5cff", "#2ee59d"];
+
+        function confettiBurst(count = 35) {
+            for(let i = 0; i < count; i++) {
+                const c = document.createElement("div");
+                c.className = "confetti";
+                c.style.left = Math.random() * 100 + "vw";
+                c.style.background = dotColors[Math.floor(Math.random() * dotColors.length)];
+                c.style.animationDuration = (0.9 + Math.random() * 0.9) + "s";
+                document.body.appendChild(c);
+                c.addEventListener("animationend", () => c.remove());
+            }
+        }
+
+        function balloonsBurst(n = 10) {
+            for(let i = 0; i < n; i++) {
+                const b = document.createElement("div");
+                b.className = "balloon";
+                b.style.left = Math.random() * 100 + "vw";
+                b.style.background = dotColors[Math.floor(Math.random() * dotColors.length)];
+                b.style.setProperty("--dx", (Math.random() * 120 - 60) + "px");
+                b.style.animationDuration = (3.2 + Math.random() * 2.2) + "s";
+                document.body.appendChild(b);
+                b.addEventListener("animationend", () => b.remove());
+            }
+        }
+
+        // --- 3. MUSIC ENGINE FROM INDEX COPY ---
+        let audioCtx = null;
+        let playing = false;
+
+        function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+        async function playTone(freq, ms, type = "triangle", gain = 0.055) {
+            const ctx = audioCtx;
+            const o = ctx.createOscillator();
+            const g = ctx.createGain();
+            o.type = type;
+            o.frequency.value = freq;
+            g.gain.value = 0.0001;
+            o.connect(g);
+            g.connect(ctx.destination);
+            o.start();
+            g.gain.setTargetAtTime(gain, ctx.currentTime, 0.01);
+            await sleep(ms);
+            g.gain.setTargetAtTime(0.0001, ctx.currentTime, 0.01);
+            await sleep(70);
+            o.stop();
+            o.disconnect();
+            g.disconnect();
+        }
+
+        async function playBirthdayTune() {
+            const C4=261.63, G4=392.00, A4=440.00, Bb4=466.16, C5=523.25, D5=587.33, E5=659.25, F5=698.46, G5=783.99;
+            const seq = [
+                [G4, 260],[G4, 260],[A4, 520],[G4, 520],[C5, 520],[Bb4, 980],
+                [G4, 260],[G4, 260],[A4, 520],[G4, 520],[D5, 520],[C5, 980],
+                [G4, 260],[G4, 260],[G5, 520],[E5, 520],[C5, 520],[Bb4, 520],[A4, 980],
+                [F5, 260],[F5, 260],[E5, 520],[C5, 520],[D5, 520],[C5, 980],
+            ];
+            for(const [f, d] of seq) {
+                if (!playing) break;
+                await playTone(f, d);
+            }
+        }
+
+        // --- 4. TRIGGER EVERYTHING ON CLICK ---
+        document.getElementById('celebBtn').addEventListener('click', async () => {
+            // New Confetti Library Trigger
+            confetti({
+                particleCount: 150,
+                spread: 70,
+                origin: { y: 0.6 },
+                colors: ['#ff69b4', '#ffd166', '#bf3661', '#ffffff']
+            });
+
+            // Keep original effects
+            confettiBurst(40);
+            balloonsBurst(12);
+
+            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            if (audioCtx.state === "suspended") await audioCtx.resume();
+            
+            if (!playing) {
+                playing = true;
+                playBirthdayTune().finally(() => playing = false);
+            }
+        });
+    </script>
+</body>
+</html>

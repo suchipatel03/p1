@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Anniversary</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Montserrat:wght@300;500&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        body {
+            margin: 0; padding: 0; min-height: 100vh; display: flex; justify-content: center; align-items: center;
+            background: linear-gradient(rgba(167, 77, 103, 0.4), rgba(150, 11, 62, 0.3)), 
+                        url('https://images.unsplash.com/photo-1513272795195-985ad3340579?q=80&w=2000') no-repeat center center fixed;
+            background-size: cover; font-family: 'Montserrat', sans-serif; overflow: hidden;
+        }
+        .container {
+            max-width: 1250px; padding: 50px; background: rgba(153, 22, 72, 0.35);
+            backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
+            border-radius: 40px; border: 2px solid rgba(173, 23, 80, 0.4);
+            text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.5); z-index: 10; position: relative;
+        }
+        h1 { 
+            font-family: 'Dancing Script', cursive; 
+            font-size: 3rem; 
+            color: #ffffff; 
+            margin-bottom: 20px; 
+            text-shadow: 3px 3px 15px rgba(0,0,0,0.3); 
+        }
+        p { 
+            font-size: 1.8rem; 
+            line-height: 1.6; 
+            color: #ffffff; 
+            font-weight: 300; 
+            margin-bottom: 35px; 
+            text-shadow: 1px 1px 10px rgba(0,0,0,0.5);
+        }
+        
+        .btn-row { 
+            display: flex; 
+            gap: 15px; 
+            justify-content: center; 
+            flex-wrap: wrap; 
+        }
+        
+        .back-btn, .music-btn { 
+            text-decoration: none; color: #ffffff; font-weight: 500; letter-spacing: 2px; 
+            border: 2px solid #f3abc7; padding: 12px 40px; border-radius: 50px; 
+            transition: all 0.4s ease; background: rgba(158, 29, 80, 0.4); 
+            display: inline-block; position: relative; z-index: 20; cursor: pointer;
+            font-family: 'Montserrat', sans-serif;
+        }
+        .back-btn:hover, .music-btn:hover { background: #772f4b; color: #f3abc7; transform: scale(1.1); }
+
+        .hibiscus { position: absolute; bottom: -50px; font-size: 25px; animation: floatHibiscus 7s linear infinite; z-index: 1; pointer-events: none; }
+        @keyframes floatHibiscus {
+            0% { transform: translateY(0) rotate(0deg); opacity: 0.8; }
+            100% { transform: translateY(-110vh) rotate(180deg); opacity: 0; }
+        }
+
+        .flower-pop {
+            position: fixed; bottom: -50px; font-size: 35px;
+            pointer-events: none; animation: flowerUp 3.5s ease-out forwards; z-index: 5;
+        }
+        @keyframes flowerUp {
+            0% { transform: translateY(0) scale(0.5) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(-120vh) translateX(var(--dx)) scale(1.8) rotate(360deg); opacity: 0; }
+        }
+
+        .petal {
+            position: fixed; top: -10px; width: 12px; height: 12px;
+            background: #ffb7c5; border-radius: 150% 0 150% 0;
+            opacity: 0.8; pointer-events: none; animation: petalFall 3.5s linear forwards; z-index: 100;
+        }
+        @keyframes petalFall {
+            to { transform: translateY(110vh) rotate(720deg) translateX(80px); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Happy 4 Years Anniversary Akshu!!</h1>
+        <p>
+            4 YEARSS Babess!!! We are Together since we were 16-17 and look at us babess we're already in our 20s.
+             We grew up so fast time is flying babess. But our Love also grew with us. I know it'll grow more and more age and love both but we will be together.
+             I Love You babess. I want to give you all the Happiness. I want to See you laugh. In this 5th year we will be stay strong together and 
+             phase every problem together. We will not give up it's us against the problem. We will meet again and make more memories together.
+             we will make our relationship better and healthy. We will do everything babess. I know you Love me and You know I love you.
+             We will stay together and make eachothers life easier to live. Not every Problem can be solved but we should stay together babess.
+            I Love You Akshu, Always and Forever.
+        </p>
+        <div class="btn-row">
+            <button class="music-btn" id="playBtn">CELEBRATE OUR LOVE ❤️</button>
+            <a href="index.html" class="back-btn">RETURN HOME</a>
+        </div>
+    </div>
+
+    <script>
+        // --- 1. AMBIENT FLOWERS ---
+        function spawnHibiscus() {
+            const h = document.createElement('div');
+            h.className = 'hibiscus';
+            h.innerHTML = '🌺';
+            h.style.left = Math.random() * 100 + 'vw';
+            document.body.appendChild(h);
+            setTimeout(() => h.remove(), 7000);
+        }
+        setInterval(spawnHibiscus, 500);
+
+        // --- 2. INTENSE FLOWER & PETAL BURST ---
+        function flowerBurst(count = 30) {
+            const flowers = ['🌹', '🌸', '💐', '🌷', '✨', '💖'];
+            for(let i = 0; i < count; i++) {
+                setTimeout(() => {
+                    const f = document.createElement("div");
+                    f.className = "flower-pop";
+                    f.innerHTML = flowers[Math.floor(Math.random() * flowers.length)];
+                    f.style.left = Math.random() * 100 + "vw";
+                    f.style.setProperty("--dx", (Math.random() * 300 - 150) + "px");
+                    document.body.appendChild(f);
+                    setTimeout(() => f.remove(), 3500);
+                }, i * 50); 
+            }
+        }
+
+        function petalRain(count = 60) {
+            for(let i = 0; i < count; i++) {
+                const p = document.createElement("div");
+                p.className = "petal";
+                p.style.left = Math.random() * 100 + "vw";
+                p.style.background = Math.random() > 0.5 ? '#ffb7c5' : '#f3abc7';
+                p.style.animationDuration = (2.5 + Math.random() * 2) + "s";
+                p.style.opacity = 0.5 + Math.random() * 0.5;
+                document.body.appendChild(p);
+                setTimeout(() => p.remove(), 4000);
+            }
+        }
+
+        // --- 3. ROMANTIC TUNE ---
+        let audioCtx = null;
+        let playing = false;
+
+        async function playTone(freq, ms, type="sine", gain=0.04) {
+            const ctx = audioCtx;
+            const o = ctx.createOscillator();
+            const g = ctx.createGain();
+            o.type = type;
+            o.frequency.value = freq;
+            g.gain.setValueAtTime(0.001, ctx.currentTime);
+            g.gain.linearRampToValueAtTime(gain, ctx.currentTime + 0.05);
+            g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + ms/1000);
+            o.connect(g); g.connect(ctx.destination);
+            o.start();
+            setTimeout(() => { o.stop(); o.disconnect(); }, ms + 50);
+        }
+
+        async function playRomanticTune() {
+            const C4=261, D4=293, E4=329, F4=349, G4=392, A4=440, B4=493, C5=523, D5=587;
+            const melody = [
+                [E4, 300], [G4, 300], [C5, 600], [D5, 300], [C5, 600],
+                [B4, 300], [A4, 300], [G4, 600],
+                [A4, 300], [C5, 300], [B4, 300], [A4, 300], [G4, 600],
+                [F4, 300], [E4, 300], [D4, 600], [C4, 800]
+            ];
+            for(const [f, d] of melody) {
+                if (!playing) break;
+                await playTone(f, d);
+                await new Promise(r => setTimeout(r, d + 30)); 
+            }
+        }
+
+        // --- 4. INTERACTION (NOW WITH CONFETTI LIBRARY) ---
+        document.getElementById('playBtn').addEventListener('click', async () => {
+            // High-quality Library Confetti
+            confetti({
+                particleCount: 150,
+                spread: 70,
+                origin: { y: 0.6 },
+                colors: ['#f3abc7', '#9e1d50', '#ffffff', '#ffb7c5']
+            });
+
+            flowerBurst(35); 
+            petalRain(80);  
+
+            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            if (audioCtx.state === "suspended") await audioCtx.resume();
+            
+            if (!playing) {
+                playing = true;
+                playRomanticTune().finally(() => playing = false);
+            }
+        });
+    </script>
+</body>
+</html>

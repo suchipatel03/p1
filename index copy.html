@@ -1,0 +1,430 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Birthday Card</title>
+  <style>
+    body{
+      margin:0;
+      min-height:100vh;
+      display:grid;
+      place-items:center;
+      font-family: system-ui, Arial, sans-serif;
+      background: linear-gradient(135deg, #d36796, #6cadc5);
+      overflow:hidden;
+    }
+
+    /* ========== CAT THEME BACKGROUND ========== */
+    .catBG{
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      opacity:.9;
+      background:
+        radial-gradient(circle at 10% 10%, rgba(255,182,193,.45), transparent 40%),
+        radial-gradient(circle at 90% 25%, rgba(173,216,230,.45), transparent 45%),
+        radial-gradient(circle at 40% 90%, rgba(255,228,181,.40), transparent 50%),
+        linear-gradient(135deg, #e3e0e2, #b4d9d9);
+      overflow:hidden;
+    }
+    /* repeating cat faces as a subtle pattern */
+    .catBG::before{
+      content:"";
+      position:absolute;
+      inset:-40px;
+      background-image:
+        radial-gradient(circle, rgba(0,0,0,.06) 2px, transparent 3px);
+      background-size: 120px 120px;
+      mask-image: none;
+      opacity:.35;
+    }
+
+    .catSticker{
+      position:absolute;
+      font-size: clamp(28px, 4vw, 46px);
+      opacity:.55;
+      filter: drop-shadow(0 10px 15px rgba(0,0,0,.08));
+      animation: kittyFloat 10s linear infinite;
+      transform: translateY(120vh);
+    }
+    @keyframes kittyFloat{
+      from{ transform: translateY(120vh) translateX(0) rotate(-3deg); }
+      to  { transform: translateY(-30vh) translateX(var(--dx)) rotate(4deg); }
+    }
+
+    /* floating paw prints */
+    .paw{
+      position:fixed;
+      width:26px; height:26px;
+      opacity:.25;
+      pointer-events:none;
+      transform: translateY(110vh) rotate(0deg);
+      animation: pawDrift 9s linear infinite;
+      filter: blur(.1px);
+    }
+    @keyframes pawDrift{
+      to{ transform: translateY(-25vh) rotate(35deg) translateX(var(--dx)); }
+    }
+    /* simple paw using CSS circles */
+    .paw::before, .paw::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      background: rgba(0,0,0,.12);
+      border-radius: 60% 60% 60% 60%;
+      clip-path: path("M 13 24 C 7 24 4 19 6 15 C 7.5 12 9.5 11 13 11 C 16.5 11 18.5 12 20 15 C 22 19 19 24 13 24 Z");
+    }
+    .paw .toe{
+      position:absolute;
+      width:7px; height:7px;
+      background: rgba(0,0,0,.12);
+      border-radius:50%;
+      top:3px;
+    }
+    .paw .t1{ left:4px; }
+    .paw .t2{ left:10px; top:1px; }
+    .paw .t3{ left:16px; }
+
+    /* ========== CARD ========== */
+    .card{
+        width: min(480px, 94vw);   /* was 390px */
+        padding: 100px 80px;        /* was 28px 22px */
+        border-radius: 20px;
+        box-shadow: 0 22px 60px rgba(232, 122, 177, 0.64);
+        position: relative;
+        overflow: hidden;
+        animation: popIn 650ms cubic-bezier(.2,.9,.2,1) both;
+    }
+    @keyframes popIn{
+      from{ transform: translateY(16px) scale(.95); opacity:0; }
+      to  { transform: translateY(0) scale(1); opacity:1; }
+    }
+
+    /* sparkle sweep */
+    .card::after{
+      content:"";
+      position:absolute;
+      top:-40%;
+      left:-60%;
+      width:60%;
+      height:200%;
+      background: linear-gradient(90deg, transparent, rgba(187, 107, 155, 0.366), transparent);
+      transform: rotate(18deg);
+      animation: shine 3.2s ease-in-out infinite;
+      pointer-events:none;
+    }
+    @keyframes shine{
+      0%   { left:-70%; opacity:.0; }
+      15%  { opacity:.55; }
+      40%  { left:130%; opacity:.0; }
+      100% { left:130%; opacity:0; }
+    }
+
+    .content{ position:relative; z-index:1; }
+
+    h1{
+      margin:0 0 6px;
+      font-size:38px;
+      font-family: "Segoe Print", "Bradley Hand", "Comic Sans MS", cursive;
+      display:inline-block;
+      animation: wiggle 2.6s ease-in-out infinite;
+      transform-origin: 50% 80%;
+    }
+    @keyframes wiggle{
+      0%,100%{ transform: rotate(0deg); }
+      25%{ transform: rotate(-2deg); }
+      50%{ transform: rotate(2deg); }
+      75%{ transform: rotate(-1deg); }
+    }
+
+    .sub{
+      margin:0 0 12px;
+      font-size: larger;
+      color:#444;
+      line-height:1.4;
+    }
+
+    .btnRow{
+      display:flex;
+      gap:10px;
+      justify-content:center;
+      flex-wrap:wrap;
+      margin:2px 0 0;
+    }
+
+    button{
+      border:0;
+      padding:12px 14px;
+      border-radius:12px;
+      font-weight:800;
+      cursor:pointer;
+      background:#b2346d;
+      color:#fff;
+      transition: transform 120ms ease, filter 120ms ease;
+    }
+    button:hover{ filter: brightness(1.06); transform: translateY(-1px); }
+    button:active{ transform: translateY(0) scale(.99); }
+
+    .msgWrap{
+      margin-top:14px;
+      text-align:left;
+      background: rgba(157, 42, 107, 0.361);
+      border: 1px solid rgba(142, 33, 97, 0.931);
+      border-radius:14px;
+      padding: 30px 18px;
+    }
+    .msgTitle{
+      font-weight:900;
+      color:#2a2a2a;
+      margin-bottom:6px;
+    }
+    .msg{
+      color:#2a2a2a;
+      min-height: 70px;   
+      line-height: 1.45;
+      white-space:pre-wrap;
+      word-break:break-word;
+    }
+    .msg.pop{ animation: msgPop 420ms cubic-bezier(.2,.9,.2,1); }
+    @keyframes msgPop{
+      from{ transform: translateY(6px) scale(.98); opacity:0; }
+      to  { transform: translateY(0) scale(1); opacity:1; }
+    }
+
+    /* confetti */
+    .confetti{
+      position:fixed;
+      top:-12px;
+      width:10px; height:10px;
+      border-radius:3px;
+      opacity:.9;
+      pointer-events:none;
+      animation: fall 1.25s ease-in forwards;
+    }
+    @keyframes fall{
+      to{ transform: translateY(110vh) rotate(420deg); opacity:0; }
+    }
+
+    /* balloons */
+    .balloon{
+      position:fixed;
+      bottom:-80px;
+      width:44px; height:56px;
+      border-radius:55% 55% 55% 55%;
+      opacity:.95;
+      pointer-events:none;
+      animation: floatUp 4.2s linear forwards;
+      box-shadow: inset 0 -10px 16px rgba(0,0,0,.12);
+      border: 1px solid rgba(0,0,0,.06);
+    }
+    .balloon:after{
+      content:"";
+      position:absolute;
+      left:50%; bottom:-50px;
+      width:2px; height:50px;
+      transform:translateX(-50%);
+      background:rgba(0,0,0,.12);
+    }
+    @keyframes floatUp{
+      to{ transform: translateY(-120vh) translateX(var(--dx)); opacity:0; }
+    }
+
+    
+  </style>
+</head>
+<body>
+  <!-- Cat themed background layer -->
+  <div class="catBG" id="catBG"></div>
+
+  <div class="card">
+    <div class="content">
+      <h1>🐱Happy Valentine's Day!💓</h1>
+      <p class="sub">Wishing you a purr-fect day full of fun, smiles, and cake!</p>
+
+      <div class="btnRow">
+        <button id="btn">Open Message 💌</button>
+      </div>
+
+      <div class="msgWrap">
+        <div class="msgTitle">Message for you</div>
+        <div class="msg" id="msg"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    // ====== WRITE YOUR NAME HERE ======
+    const NAME = "Friend";
+    // ================================
+
+    // ====== WRITE YOUR MESSAGE HERE ======
+    const CUSTOM_MESSAGE =
+      "Hope your birthday is pawsome, full of treats, and zero meow-dramas! 🐾🎉";
+    // ====================================
+
+    const dotColors = ["#ff69b4", "#00b4ff", "#ffd166", "#7c5cff", "#2ee59d"];
+
+    // ---- Cat background stickers + paw prints ----
+    const catBG = document.getElementById("catBG");
+
+    // floating cat emoji stickers
+    const cats = ["🐱","🐾","💌","😸","😻","💓","✨"];
+    for (let i=0;i<10;i++){
+      const s = document.createElement("div");
+      s.className = "catSticker";
+      s.textContent = cats[Math.floor(Math.random()*cats.length)];
+      s.style.left = Math.random()*100 + "vw";
+      s.style.setProperty("--dx", (Math.random()*120 - 60) + "px");
+      s.style.animationDuration = (8 + Math.random()*8) + "s";
+      s.style.animationDelay = (-Math.random()*10) + "s";
+      catBG.appendChild(s);
+    }
+
+    // paw prints drifting up
+    for (let i=0;i<12;i++){
+      const p = document.createElement("div");
+      p.className = "paw";
+      p.style.left = Math.random()*100 + "vw";
+      p.style.setProperty("--dx", (Math.random()*120 - 60) + "px");
+      p.style.animationDuration = (7 + Math.random()*7) + "s";
+      p.style.animationDelay = (-Math.random()*9) + "s";
+
+      // add toes
+      const t1 = document.createElement("div"); t1.className="toe t1";
+      const t2 = document.createElement("div"); t2.className="toe t2";
+      const t3 = document.createElement("div"); t3.className="toe t3";
+      p.appendChild(t1); p.appendChild(t2); p.appendChild(t3);
+
+      document.body.appendChild(p);
+    }
+
+    // ---- Confetti ----
+    function confettiBurst(count=28){
+      for(let i=0;i<count;i++){
+        const c = document.createElement("div");
+        c.className = "confetti";
+        c.style.left = Math.random()*100 + "vw";
+        c.style.background = dotColors[Math.floor(Math.random()*dotColors.length)];
+        c.style.width = (6 + Math.random()*8) + "px";
+        c.style.height = (6 + Math.random()*10) + "px";
+        c.style.borderRadius = (2 + Math.random()*5) + "px";
+        c.style.animationDuration = (0.9 + Math.random()*0.9) + "s";
+        document.body.appendChild(c);
+        c.addEventListener("animationend", () => c.remove());
+      }
+    }
+
+    // ---- Balloons ----
+    function balloonsBurst(n = 8){
+      for(let i=0;i<n;i++){
+        const b = document.createElement("div");
+        b.className = "balloon";
+        b.style.left = Math.random()*100 + "vw";
+        b.style.background = dotColors[Math.floor(Math.random()*dotColors.length)];
+        b.style.setProperty("--dx", (Math.random()*120 - 60) + "px");
+        b.style.animationDuration = (3.2 + Math.random()*2.2) + "s";
+        document.body.appendChild(b);
+        b.addEventListener("animationend", () => b.remove());
+      }
+    }
+
+    // ---- Typewriter effect ----
+    function typeMessage(text, el, speed = 22) {
+      el.textContent = "";
+      let i = 0;
+      const t = setInterval(() => {
+        el.textContent += text[i++] ?? "";
+        if (i >= text.length) clearInterval(t);
+      }, speed);
+      return () => clearInterval(t);
+    }
+
+    // ---- Music (AUTO-plays when message opens; no “Play tune” text shown) ----
+    let audioCtx = null;
+    let playing = false;
+
+    function sleep(ms){ return new Promise(r => setTimeout(r, ms)); }
+
+    async function playTone(freq, ms, type="triangle", gain=0.055){
+      const ctx = audioCtx;
+      const o = ctx.createOscillator();
+      const g = ctx.createGain();
+      o.type = type;
+      o.frequency.value = freq;
+
+      g.gain.value = 0.0001;
+      o.connect(g);
+      g.connect(ctx.destination);
+
+      o.start();
+      g.gain.setTargetAtTime(gain, ctx.currentTime, 0.01);
+      await sleep(ms);
+      g.gain.setTargetAtTime(0.0001, ctx.currentTime, 0.01);
+      await sleep(70);
+      o.stop();
+      o.disconnect();
+      g.disconnect();
+    }
+
+    async function playBirthdayTune(){
+      const C4=261.63, G4=392.00, A4=440.00, Bb4=466.16, C5=523.25;
+      const D5=587.33, E5=659.25, F5=698.46, G5=783.99;
+
+      const seq = [
+        [G4, 260],[G4, 260],[A4, 520],[G4, 520],[C5, 520],[Bb4, 980],
+        [G4, 260],[G4, 260],[A4, 520],[G4, 520],[D5, 520],[C5, 980],
+        [G4, 260],[G4, 260],[G5, 520],[E5, 520],[C5, 520],[Bb4, 520],[A4, 980],
+        [F5, 260],[F5, 260],[E5, 520],[C5, 520],[D5, 520],[C5, 980],
+      ];
+
+      for(const [f, d] of seq){
+        if (!playing) break;
+        await playTone(f, d);
+      }
+    }
+
+    async function startMusic(){
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      if (audioCtx.state === "suspended") await audioCtx.resume();
+      if (playing) return;
+
+      playing = true;
+      try{
+        await playBirthdayTune();
+      } finally {
+        playing = false;
+      }
+    }
+
+    // ---- Open message ----
+    const msgEl = document.getElementById("msg");
+    let stopTyping = null;
+    let openedOnce = false;
+
+    document.getElementById("btn").addEventListener("click", async () => {
+      const finalMsg = `Dear ${NAME},\n\n${CUSTOM_MESSAGE}`;
+
+      if (stopTyping) stopTyping();
+
+      msgEl.classList.remove("pop");
+      void msgEl.offsetWidth;
+      msgEl.classList.add("pop");
+
+      stopTyping = typeMessage(finalMsg, msgEl, 22);
+
+      confettiBurst(32);
+      balloonsBurst(10);
+
+      // Auto-play tune ONLY when message is opened (and only once if you want)
+      if (!openedOnce){
+        openedOnce = true;
+        startMusic();
+      } else {
+        // If you want it to play every time, remove this else block and the openedOnce check.
+      }
+    });
+  </script>
+</body>
+</html>

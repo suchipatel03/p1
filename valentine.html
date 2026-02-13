@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Valentine</title>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@300&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        body {
+            margin: 0; padding: 0; min-height: 100vh; display: flex; justify-content: center; align-items: center;
+            background: linear-gradient(45deg, rgba(89, 13, 34, 0.8), rgba(205, 85, 127, 0.6)), 
+                        url('https://images.unsplash.com/photo-1516589174184-c68d8e41d302?q=80&w=2000') no-repeat center center fixed;
+            background-size: cover; font-family: 'Great Vibes', cursive; color: #fff; overflow: hidden;
+        }
+
+        .letter-container {
+            max-width: 1150px; padding: 50px; background: rgba(153, 22, 72, 0.4); 
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border-radius: 30px; border: 1px solid rgba(255, 255, 255, 0.2);
+            text-align: center; box-shadow: 0 25px 50px rgba(0,0,0,0.4);
+            animation: softSlideUp 1.5s ease-out; margin: 20px; z-index: 10; position: relative;
+        }
+
+        h1 { font-size: 3.5rem; margin-bottom: 20px; color: #ffb3c1; text-shadow: 2px 2px 10px rgba(0,0,0,0.3); }
+        p { font-size: 2.2rem; line-height: 1.4; margin-bottom: 40px; color: #ffffff; }
+        
+        .btn-row { display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; }
+
+        .back-btn, .heart-btn { 
+            font-family: 'Montserrat', sans-serif; text-decoration: none; color: white; 
+            border: 1px solid rgba(255, 255, 255, 0.5); padding: 12px 30px; 
+            border-radius: 50px; transition: all 0.4s ease; position: relative; z-index: 20;
+            background: rgba(255, 255, 255, 0.1); cursor: pointer; font-size: 14px;
+        }
+        .heart-btn { background: #ff4d6d; border: none; font-weight: bold; }
+        .back-btn:hover, .heart-btn:hover { background: #ff4d6d; transform: scale(1.05); color: white; }
+
+        .heart-wrapper { position: absolute; bottom: -50px; z-index: 1; pointer-events: none; animation: floatUp 6s linear infinite; }
+        .beating-heart { font-size: 28px; animation: pulse 1.2s ease-in-out infinite; }
+        @keyframes floatUp { 0% { transform: translateY(0); opacity: 1; } 100% { transform: translateY(-110vh); opacity: 0; } }
+        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.4); } }
+        @keyframes softSlideUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
+
+        .heart-pop {
+            position: fixed; bottom: -50px; font-size: 40px;
+            pointer-events: none; animation: heartBurstAnim 3.5s ease-out forwards; z-index: 100;
+        }
+        @keyframes heartBurstAnim {
+            0% { transform: translateY(0) scale(0.5) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(-120vh) translateX(var(--dx)) scale(2) rotate(45deg); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="letter-container">
+        <h1>To My Valentine Akshu...</h1>
+        <p>
+            Happy Valentine's Day Babess. It's Our 4th Valentine Together. I Love you Babess.
+             You're More Beautiful than Roses or every other flowers. Will you be Life Partner Akshu?? Can i be Your Happiness Babess??
+             You're More Sweetier than the chocalate. I love you More than any Sweet Chocolate and Pastries. 
+             You're my Bigg teddy billu. As long as you're with me, I'm not Afraid of anything. 
+             This is my Promise to You Akshu, I will never give up on us ever, i'll keep trying to make things easy for us and give you best life and 
+             I'll never ever Leave you. A Hug from you is all i need to survive from this crule world and my problems. Your Hug will be the last wish of mine.
+            Kiss..we never stopped and we will never stop and i want to spend my every Valentine Day With you till Death.
+            I LOVE YOU!!!
+        </p>
+        
+        <div class="btn-row">
+            <button class="heart-btn" id="playBtn">SEND MY LOVE ❤️</button>
+            <a href="index.html" class="back-btn">← Back</a>
+        </div>
+    </div>
+
+    <script>
+        // --- NEW: AUTO CONFETTI ON LOAD ---
+        window.onload = () => {
+            const duration = 5 * 1000;
+            const animationEnd = Date.now() + duration;
+            const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+
+            function randomInRange(min, max) {
+                return Math.random() * (max - min) + min;
+            }
+
+            const interval = setInterval(function() {
+                const timeLeft = animationEnd - Date.now();
+                if (timeLeft <= 0) return clearInterval(interval);
+
+                const particleCount = 40 * (timeLeft / duration);
+                
+                confetti(Object.assign({}, defaults, { 
+                    particleCount, 
+                    origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 },
+                    colors: ['#ff4d6d', '#ffb3c1', '#ffffff']
+                }));
+                confetti(Object.assign({}, defaults, { 
+                    particleCount, 
+                    origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 },
+                    colors: ['#ff4d6d', '#ffd700', '#ffffff'] 
+                }));
+            }, 250);
+        };
+
+        // --- BACKGROUND HEARTS ---
+        function spawnHeart() {
+            const wrapper = document.createElement('div');
+            wrapper.className = 'heart-wrapper';
+            const heart = document.createElement('div');
+            heart.className = 'beating-heart';
+            heart.innerHTML = '💓'; 
+            wrapper.style.left = Math.random() * 100 + 'vw';
+            wrapper.style.animationDuration = (Math.random() * 3 + 4) + 's';
+            wrapper.appendChild(heart);
+            document.body.appendChild(wrapper);
+            setTimeout(() => wrapper.remove(), 7000);
+        }
+        setInterval(spawnHeart, 400);
+
+        function heartPopBurst(count = 35) {
+            const heartTypes = ['❤️', '💖', '💘', '💝', '✨'];
+            for(let i = 0; i < count; i++) {
+                setTimeout(() => {
+                    const h = document.createElement("div");
+                    h.className = "heart-pop";
+                    h.innerHTML = heartTypes[Math.floor(Math.random() * heartTypes.length)];
+                    h.style.left = Math.random() * 100 + "vw";
+                    h.style.setProperty("--dx", (Math.random() * 400 - 200) + "px");
+                    document.body.appendChild(h);
+                    setTimeout(() => h.remove(), 3500);
+                }, i * 60);
+            }
+        }
+
+        // --- MUSIC ENGINE (Anniversary Sound + Perfect Tune) ---
+        let audioCtx = null;
+        let playing = false;
+
+        async function playTone(freq, ms, type="sine", gain=0.04) {
+            const ctx = audioCtx;
+            const o = ctx.createOscillator();
+            const g = ctx.createGain();
+            o.type = type;
+            o.frequency.value = freq;
+            g.gain.setValueAtTime(0.001, ctx.currentTime);
+            g.gain.linearRampToValueAtTime(gain, ctx.currentTime + 0.1);
+            g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + ms/1000);
+            o.connect(g); g.connect(ctx.destination);
+            o.start();
+            setTimeout(() => { o.stop(); o.disconnect(); }, ms + 100);
+        }
+
+        async function playPerfect() {
+            const F4=349, G4=392, Ab4=415, Bb4=466, C5=523, Db5=554, Eb5=622;
+            const melody = [
+                [Ab4, 250], [Ab4, 250], [Ab4, 250], [Ab4, 250], [Bb4, 250], [C5, 500],
+                [Bb4, 250], [Ab4, 500],
+                [Ab4, 250], [C5, 250], [Db5, 250], [Eb5, 500],
+                [C5, 250], [Bb4, 500],
+                [Ab4, 250], [Bb4, 250], [Ab4, 800]
+            ];
+
+            for(const [f, d] of melody) {
+                if (!playing) break;
+                await playTone(f, d);
+                await new Promise(r => setTimeout(r, d + 40)); 
+            }
+        }
+
+        document.getElementById('playBtn').addEventListener('click', async () => {
+            heartPopBurst(30);
+            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            if (audioCtx.state === "suspended") await audioCtx.resume();
+            if (!playing) {
+                playing = true;
+                playPerfect().finally(() => playing = false);
+            }
+        });
+    </script>
+</body>
+</html>

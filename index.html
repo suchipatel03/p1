@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Love Letters</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Poppins:wght@300;500&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        :root { --glass: rgba(255, 255, 255, 0.25); --border: rgba(255, 255, 255, 0.4); }
+        
+        body { 
+            margin: 0; 
+            height: 100vh; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: center; 
+            align-items: center; 
+            background: linear-gradient(45deg, #ff9a9e, #fad0c4); 
+            font-family: 'Poppins', sans-serif; 
+            overflow: hidden; 
+        }
+        
+        .main-heading {
+            font-family: 'Dancing Script', cursive;
+            color: #9a214fca;
+            font-size: 4rem;
+            margin-bottom: 40px;
+            text-shadow: 2px 2px 10px rgba(255, 255, 255, 0.5);
+            z-index: 10;
+        }
+
+        .heart { position: absolute; pointer-events: none; animation: floatUp 5s linear infinite; z-index: 1; }
+        @keyframes floatUp {
+            0% { transform: translateY(110vh) scale(0.5); opacity: 0; }
+            50% { opacity: 0.8; }
+            100% { transform: translateY(-10vh) scale(1.2); opacity: 0; }
+        }
+
+        .container { display: flex; gap: 50px; z-index: 10; width: 90%; max-width: 800px; justify-content: center; }
+        .card-wrapper { flex: 1; display: flex; flex-direction: column; align-items: center; transition: 0.4s; }
+        .card-wrapper:hover { transform: translateY(-15px); }
+
+        .letter-btn {
+            width: 100px; height: 100px; background: var(--glass); backdrop-filter: blur(10px);
+            border: 1px solid var(--border); border-radius: 50%; font-size: 45px; cursor: pointer;
+            display: flex; justify-content: center; align-items: center; margin-bottom: 20px;
+            transition: 0.3s;
+        }
+
+        .letter-btn.locked {
+            cursor: not-allowed;
+            filter: grayscale(1) opacity(0.6);
+        }
+
+        .timer-display {
+            font-size: 0.8rem;
+            color: #d63384;
+            font-weight: 500;
+            margin-top: 5px;
+            min-height: 1.2rem;
+        }
+
+        .footer-note {
+            margin-top: 40px;
+            font-family: 'Poppins', sans-serif;
+            color: #9a214fca;
+            font-size: 1rem;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 10px 20px;
+            border-radius: 20px;
+            z-index: 10;
+        }
+
+        .title { font-family: 'Dancing Script', cursive; color: #d63384; font-size: 1.6rem; white-space: nowrap; }
+
+        .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); backdrop-filter: blur(8px); justify-content: center; align-items: center; z-index: 100; }
+        .message-box { background: white; padding: 40px; border-radius: 30px; text-align: center; max-width: 350px; border: 2px solid #ffccd5; }
+        .message-box h2 { font-family: 'Dancing Script', cursive; color: #ff4d6d; font-size: 2.5rem; }
+        .close-btn { margin-top: 20px; background: #ff4d6d; color: white; border: none; padding: 10px 25px; border-radius: 20px; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+    <h1 class="main-heading">Letters for you 💖</h1>
+
+    <div class="container">
+        <div class="card-wrapper">
+            <button id="btn-valentine" class="letter-btn" onclick="openMsg('valentine')">💌</button>
+            <div class="title">Valentine's Day</div>
+            <div id="timer-valentine" class="timer-display"></div>
+        </div>
+        <div class="card-wrapper">
+            <button id="btn-anniversary" class="letter-btn" onclick="openMsg('anniversary')">💍</button>
+            <div class="title">Anniversary</div>
+            <div id="timer-anniversary" class="timer-display"></div>
+        </div>
+        <div class="card-wrapper">
+            <button id="btn-birthday" class="letter-btn" onclick="openMsg('birthday')">🎈</button>
+            <div class="title">Birthday</div>
+            <div id="timer-birthday" class="timer-display"></div>
+        </div>
+    </div>
+
+    <p class="footer-note">Messages will be accessible once the date arrives.</p>
+
+    <div id="overlay" class="overlay">
+        <div class="message-box">
+            <h2 id="msg-header"></h2>
+            <p id="msg-body"></p>
+            <button class="close-btn" onclick="closeMsg()">Close</button>
+        </div>
+    </div>
+
+    <script>
+        // Trigger Confetti on Load
+        window.onload = () => {
+            const duration = 5 * 1000;
+            const animationEnd = Date.now() + duration;
+            const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+
+            function randomInRange(min, max) {
+                return Math.random() * (max - min) + min;
+            }
+
+            const interval = setInterval(function() {
+                const timeLeft = animationEnd - Date.now();
+
+                if (timeLeft <= 0) {
+                    return clearInterval(interval);
+                }
+
+                const particleCount = 50 * (timeLeft / duration);
+                
+                // Hearts and Sparkles
+                confetti(Object.assign({}, defaults, { 
+                    particleCount, 
+                    origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 },
+                    colors: ['#ff4d6d', '#ffb3c1', '#ffccd5', '#ffffff'],
+                    shapes: ['circle', 'square'] 
+                }));
+                confetti(Object.assign({}, defaults, { 
+                    particleCount, 
+                    origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 },
+                    colors: ['#ff4d6d', '#ffd700', '#ff85a1', '#ffffff'] 
+                }));
+            }, 250);
+        };
+
+        const unlockDates = {
+            valentine: new Date(2026, 1, 14, 0, 0, 0),
+            anniversary: new Date(2026, 1, 15, 0, 0, 0),
+            birthday: new Date(2026, 1, 26, 0, 0, 0)
+        };
+
+        function updateTimers() {
+            const now = new Date().getTime();
+            for (let key in unlockDates) {
+                const target = unlockDates[key].getTime();
+                const distance = target - now;
+                const btn = document.getElementById(`btn-${key}`);
+                const display = document.getElementById(`timer-${key}`);
+
+                if (distance > 0) {
+                    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    const mins = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                    const secs = Math.floor((distance % (1000 * 60)) / 1000);
+                    display.innerText = `${days}d ${hours}h ${mins}m ${secs}s`;
+                    btn.classList.add('locked');
+                } else {
+                    display.innerText = "Available! ✨";
+                    btn.classList.remove('locked');
+                }
+            }
+        }
+
+        setInterval(updateTimers, 1000);
+        updateTimers();
+
+        function openMsg(key) {
+            const now = new Date().getTime();
+            const target = unlockDates[key].getTime();
+            if (now >= target) {
+                window.location.href = key + '.html';
+            } else {
+                alert("This letter is locked until the special day! ❤️");
+            }
+        }
+
+        function closeMsg() { document.getElementById('overlay').style.display = 'none'; }
+
+        function spawnHeart() {
+            const heart = document.createElement('div');
+            heart.className = 'heart'; heart.innerHTML = '❤️';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.fontSize = (Math.random() * 20 + 10) + 'px';
+            document.body.appendChild(heart);
+            setTimeout(() => heart.remove(), 5000);
+        }
+        setInterval(spawnHeart, 400);
+    </script>
+</body>
+</html>
